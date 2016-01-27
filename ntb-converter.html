@@ -1,0 +1,193 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<script src="../jquery/dist/jquery.min.js"></script>
+<!--
+
+Example:
+
+    <ntb-converter content="{{text}}"></ntb-converter>
+
+@demo
+-->
+<dom-module id="ntb-converter">
+  <style>
+    :host {
+      display: block;
+      box-sizing: border-box;
+    }
+    a {
+      text-decoration: none;
+      color: #2196F3;
+    }
+    a :hover {
+      color: #3F51B5;
+    }
+  </style>
+
+  <template>
+    <!-- Base Content -->
+    <template id="tmpl_contents" is="dom-repeat" items="{{_topContent}}">
+      <span>{{item}}</span><br>
+    </template>
+    <!-- Expand Content -->
+    <template is="dom-if" if="{{_hasMore}}">
+      <!-- Show Text Link -->
+      <div id="showMoreContent">
+        <a href="/" on-click="_toggleMoreContent">
+          <span>{{_expandText}}</span>          
+        </a>
+      </div>
+      <!-- Toggle Group -->
+      <div id$="{{_generateToggleGroup()}}" style="display:none">
+        <!-- Expand Content -->  
+        <template is="dom-repeat" items="{{_bottomContent}}">
+          <span>{{item}}</span><br>
+        </template>        
+        <!-- Hide Text Link -->
+        <a href="/" on-click="_toggleMoreContent">
+          <span>{{_contactext}}</span>
+        </a>
+      </div>
+    </template>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 'ntb-converter',
+    properties: {
+      /**
+       * Break row
+       */
+      breakRow: {
+        type: Number,
+        value: 5
+      },
+      /**
+       * Content
+       */
+      content: {
+        type: String,
+        notify: true
+      },
+      /**
+       * less text
+       */
+      _contactext: {
+        type: String,
+        value: 'Hide Text'
+      },
+      /**
+       * more text
+       */
+      moreText: {
+        type: String,
+        value: 'More %d Rows'
+      },
+      _expandText: {
+        type: String,
+        computed: '_computeExpandText(content)'
+      },
+      _topContent: {
+        type: Array,
+        computed: '_computeTopContent(content)'
+      },
+      _bottomContent: {
+        type: Array,
+        computed: '_computeBottomContent(content)',
+      },
+      _prefixText: {
+        type: String,
+        value: 'content-printer-toggle-group'
+      },
+      _isExpanded: {
+        type: Boolean,
+        value: false,
+        observer: '_fireToggle'
+      },
+      _hasMore: {
+        type: Boolean,
+        value: false
+      },
+    },
+    /**
+     *  The 'toggle' event is fired whenever text line toggled.
+     *
+     * @event on-change
+     * @detail {{isExpanded: Boolean}}
+     */
+
+    /**
+     * hide overflow line.
+     */
+    hide: function() {
+      var divMoreContent = this.querySelector('#showMoreContent');
+      var toggleGroup = this.querySelector('#' + this._prefixText);
+      $(toggleGroup).slideUp(200, function() {
+        $(divMoreContent).show();
+        this._isExpanded = false;
+      }.bind(this));          
+    },
+    /**
+     * show overflow line.
+     */
+    expand: function() {
+      var divMoreContent = this.querySelector('#showMoreContent');
+      var toggleGroup = this.querySelector('#' + this._prefixText);
+      $(divMoreContent).hide();
+      $(toggleGroup).slideDown(200, function() {
+        this._isExpanded = true;
+      }.bind(this));
+    },
+    _computeTopContent: function(content) {
+      if (content) {
+        var contentRows = this.content.split('\n');          
+        if (contentRows.length > this.breakRow) {
+          this._hasMore = true;
+          return contentRows.splice(0, this.breakRow);
+        }
+        this._hasMore = false;
+        return contentRows;
+      }
+      return null;
+    },
+    _computeBottomContent: function(content) {
+      if (content) {
+        var contentRows = this.content.split('\n');          
+        if (contentRows.length > this.breakRow) {
+          return contentRows.splice(this.breakRow, contentRows.length);
+        }
+      }
+      return null;
+    },
+    _computeExpandText: function(content) {
+      if (content) {
+        var bottomContent = this._computeBottomContent(content);
+        return this.moreText.replace('%d', bottomContent.length);
+      }
+      return null;
+    },
+    _toggleMoreContent: function(e) {
+      if (this._isExpanded) {
+        this.hide();
+      } else {
+        this.expand();
+      }
+      e.preventDefault();
+    },
+    _generateToggleGroup: function() {
+      return this._prefixText;
+    },
+    _fireToggle: function() {
+      this.fire('toggle', {isExpanded: this._isExpanded});
+    }
+  });
+</script>

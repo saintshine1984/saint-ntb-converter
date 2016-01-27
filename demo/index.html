@@ -1,0 +1,61 @@
+<!doctype html>
+<!--
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>ntp-converter Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../ntb-converter.html">
+
+    <style>
+      iron-image {
+        background-color: lightgray;
+        margin: 1em;
+      }
+      h4 {
+        margin-bottom: 0;
+      }
+      .box {
+        font-size: 12px;
+        border:1px solid #555;
+        padding:5px;
+        margin-bottom:5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <p>An example of <code>&lt;ntb-converter&gt;</code>:</p>
+    <template is="dom-bind" id="app">
+      <iron-ajax auto
+        url="http://jsonplaceholder.typicode.com/posts/1"
+        handle-as="json"
+        on-response="handleResponse">
+      </iron-ajax>
+      <h4>Orignal</h4>
+      <span>newline character is invalid within the &lt;div&gt; tag.</span>
+      <div class="box" id="origin">{{text}}</div>
+      <h4>Converted</h4>
+      <span>ntb-converter is newline character convert to &lt;br&gt; tag.</span>
+      <div class="box">
+        <ntb-converter content="{{text}}" on-toggle="onToggle"></ntb-converter>
+      </div>
+    </template>
+    <script>
+      var app = document.querySelector('#app');
+      app.text = "This is an example of how `iron-doc-viewer` will render various types of\ninformation. You can use it as a style guide to see how various data will be\nrepresented. Markdown is used to format descriptive text throughout.\n\n# Level 1 Heading\n\nThis is a level one heading. **Bold text** and *italic text* are represented\nappropriately. [Links](#) have black underlines.\n\n## Level 2 Heading\n\nThis is a level two heading. `inline code` can be represented.\n\n    <html>\n      <p>This is a code block. Its syntax is highlighted automatically.</p>\n    </html>\n\n### Level 3 Heading\n\nLists can also be used as you'd expect:\n\n* Unordered Lists\n  * With Nesting\n* Or without nesting\n\nYou can also use ordered lists:\n\n1. First item\n2. Second item\n\n#### Level 4 Heading\n\nHeadings can be used all the way down to level 5.\n\n##### Level 5 Heading\n\nThis concludes our quick rundown of the various styles that you can commonly use.";
+
+      app.onToggle = function(event) {
+        console.log('isExpaned', event.detail.isExpanded);
+      };
+    </script>
+  </body>
+</html>
