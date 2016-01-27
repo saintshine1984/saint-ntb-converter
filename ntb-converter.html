@@ -171,7 +171,9 @@ Example:
     _computeExpandText: function(content) {
       if (content) {
         var bottomContent = this._computeBottomContent(content);
-        return this.moreText.replace('%d', bottomContent.length);
+        if (bottomContent) {
+          return this.moreText.replace('%d', bottomContent.length);  
+        }
       }
       return null;
     },
