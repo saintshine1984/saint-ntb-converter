@@ -2,4 +2,6 @@
 
 # ntb-converter
 
+```HTML
 <ntb-converter content="{{text}}"></ntb-converter>
+```
