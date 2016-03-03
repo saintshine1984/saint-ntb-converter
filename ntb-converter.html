@@ -39,23 +39,20 @@ Example:
     </template>
     <!-- Expand Content -->
     <template is="dom-if" if="{{_hasMore}}">
-      <!-- Show Text Link -->
-      <div id="showMoreContent">
-        <a href="/" on-click="_toggleMoreContent">
-          <span>{{_expandText}}</span>          
-        </a>
-      </div>
       <!-- Toggle Group -->
       <div id$="{{_generateToggleGroup()}}" style="display:none">
         <!-- Expand Content -->  
         <template is="dom-repeat" items="{{_bottomContent}}">
           <span>{{item}}</span><br>
         </template>        
-        <!-- Hide Text Link -->
+      </div>
+      <!-- Toggle Link Text -->
+      <div id="showMoreContent">
         <a href="/" on-click="_toggleMoreContent">
-          <span>{{contacText}}</span>
+          <span>{{_expandText}}</span>          
         </a>
       </div>
+      
     </template>
   </template>
 </dom-module>
@@ -86,9 +83,9 @@ Example:
         value: 'Hide Text'
       },
       /**
-       * more text
+       * expand text
        */
-      moreText: {
+      expandText: {
         type: String,
         value: 'More %d Rows',
         reflectToAttribute: true
@@ -130,10 +127,10 @@ Example:
      * hide overflow line.
      */
     hide: function() {
-      var divMoreContent = this.querySelector('#showMoreContent');
+      var label = this.querySelector('#showMoreContent span');
       var toggleGroup = this.querySelector('#' + this._prefixText);
       $(toggleGroup).slideUp(200, function() {
-        $(divMoreContent).show();
+        label.innerHTML = this._expandText;
         this._isExpanded = false;
       }.bind(this));          
     },
@@ -141,9 +138,9 @@ Example:
      * show overflow line.
      */
     expand: function() {
-      var divMoreContent = this.querySelector('#showMoreContent');
+      var label = this.querySelector('#showMoreContent span');
       var toggleGroup = this.querySelector('#' + this._prefixText);
-      $(divMoreContent).hide();
+      label.innerHTML = this.contacText;
       $(toggleGroup).slideDown(200, function() {
         this._isExpanded = true;
       }.bind(this));
