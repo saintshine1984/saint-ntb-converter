@@ -49,7 +49,7 @@ Example:
       <!-- Toggle Link Text -->
       <div id="showMoreContent">
         <a href="/" on-click="_toggleMoreContent">
-          <span>{{_expandText}}</span>          
+          <span>{{_openText}}</span>          
         </a>
       </div>
       
@@ -78,21 +78,21 @@ Example:
       /**
        * less text
        */
-      contacText: {
+      closeText: {
         type: String,
         value: 'Hide Text'
       },
       /**
        * expand text
        */
-      expandText: {
+      openText: {
         type: String,
         value: 'More %d Rows',
         reflectToAttribute: true
       },
-      _expandText: {
+      _openText: {
         type: String,
-        computed: '_computeExpandText(content)'
+        computed: '_computeopenText(content)'
       },
       _topContent: {
         type: Array,
@@ -130,7 +130,7 @@ Example:
       var label = this.querySelector('#showMoreContent span');
       var toggleGroup = this.querySelector('#' + this._prefixText);
       $(toggleGroup).slideUp(200, function() {
-        label.innerHTML = this._expandText;
+        label.innerHTML = this._openText;
         this._isExpanded = false;
       }.bind(this));          
     },
@@ -140,7 +140,7 @@ Example:
     expand: function() {
       var label = this.querySelector('#showMoreContent span');
       var toggleGroup = this.querySelector('#' + this._prefixText);
-      label.innerHTML = this.contacText;
+      label.innerHTML = this.closeText;
       $(toggleGroup).slideDown(200, function() {
         this._isExpanded = true;
       }.bind(this));
@@ -166,11 +166,11 @@ Example:
       }
       return null;
     },
-    _computeExpandText: function(content) {
+    _computeopenText: function(content) {
       if (content) {
         var bottomContent = this._computeBottomContent(content);
         if (bottomContent) {
-          return this.expandText.replace('%d', bottomContent.length);  
+          return this.openText.replace('%d', bottomContent.length);  
         }
       }
       return null;
