@@ -1,7 +1,7 @@
 [Demo](http://saintshine84.github.io/ntb-converter/components/ntb-converter/)
 
-# ntb-converter
+# saint-ntb-converter
 
 ```HTML
-<ntb-converter content="{{text}}"></ntb-converter>
+<saint-ntb-converter content="{{text}}"></saint-ntb-converter>
 ```
