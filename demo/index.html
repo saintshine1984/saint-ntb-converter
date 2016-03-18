@@ -13,7 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>ntp-converter Demo</title>
     <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../ntb-converter.html">
+    <link rel="import" href="../saint-ntb-converter.html">
 
     <style>
       iron-image {
@@ -33,7 +33,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </head>
 
   <body>
-    <p>An example of <code>&lt;ntb-converter&gt;</code>:</p>
+    <p>An example of <code>&lt;saint-ntb-converter&gt;</code>:</p>
     <template is="dom-bind" id="app">
       <iron-ajax auto
         url="http://jsonplaceholder.typicode.com/posts/1"
@@ -46,10 +46,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h4>Converted</h4>
       <span>ntb-converter is newline character convert to &lt;br&gt; tag.</span>
       <div class="box">
-        <ntb-converter
+        <saint-ntb-converter
           content="{{text}}"
           on-toggle="onToggle">
-        </ntb-converter>
+        </saint-ntb-converter>
       </div>
     </template>
     <script>

@@ -1,5 +1,5 @@
 {
-  "name": "ntb-converter",
+  "name": "saint-ntb-converter",
   "version": "1.0.1",
   "authors": [
     "saintshine84 <saintshine84@gmail.com>"
@@ -14,9 +14,9 @@
     "tag",
     "convert"
   ],
-  "main": "ntb-converter.html",
+  "main": "saint-ntb-converter.html",
   "license": "http://polymer.github.io/LICENSE.txt",
-  "homepage": "https://github.com/<USERNAME>/ntb-converter/",
+  "homepage": "https://github.com/<USERNAME>/saint-ntb-converter/",
   "ignore": [
     "/.*",
     "/test/",
