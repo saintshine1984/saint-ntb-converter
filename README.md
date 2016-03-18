@@ -1,4 +1,4 @@
-[Demo](http://saintshine84.github.io/ntb-converter/components/ntb-converter/)
+[Demo](http://saintshine84.github.io/saint-ntb-converter/components/saint-ntb-converter/)
 
 # saint-ntb-converter
 
