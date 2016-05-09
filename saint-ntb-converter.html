@@ -268,7 +268,7 @@ Custom property | Description | Default
 
       if (content) {
 
-        var contentRows = content.split('\n');          
+        var contentRows = content.toString().split('\n');
 
         if (contentRows.length > this.breakRow) {
           this._hasMore = true;
@@ -291,7 +291,8 @@ Custom property | Description | Default
 
       if (content) {
 
-        var contentRows = content.split('\n');          
+
+        var contentRows = content.toString().split('\n');
 
         if (contentRows.length > this.breakRow) {
           return contentRows.splice(this.breakRow, contentRows.length);
