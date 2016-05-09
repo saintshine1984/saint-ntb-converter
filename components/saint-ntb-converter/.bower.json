@@ -1,0 +1,42 @@
+{
+  "name": "saint-ntb-converter",
+  "authors": [
+    "saintshine84 <saintshine84@gmail.com>"
+  ],
+  "description": "new line to br tag",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer",
+    "newline",
+    "br",
+    "tag",
+    "convert"
+  ],
+  "main": "saint-ntb-converter.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/<USERNAME>/saint-ntb-converter/",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "jquery": "~2.2.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "web-component-tester": "*"
+  },
+  "_release": "f1445df330",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "f1445df33060556a8237b05b76e86743eb6ef880"
+  },
+  "_source": "git://github.com/saintshine84/saint-ntb-converter.git",
+  "_target": "master",
+  "_originalSource": "saintshine84/saint-ntb-converter",
+  "_direct": true
+}
