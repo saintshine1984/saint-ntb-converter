@@ -29,8 +29,8 @@ Custom property | Description | Default
 `--saint-ntb-converter-link-text-color` | Color of toggle text  | `--paper-blue-500`
 `--saint-ntb-converter-link-hover-text` | Mixin applied to the a:hover toggle text  | `{}`
 `--saint-ntb-converter-link-hover-text-color` | Color of a:hover toggle text  | `--paper-indigo-500`
-`--saint-ntb-converter-placeholder`     | Mixin applied to the placeholder text | `--disabled-text-color`
-
+`--saint-ntb-converter-placeholder-text`     | Mixin applied to the placeholder text | `{}`
+`--saint-ntb-converter-placeholder-text-color`| Color of placeholder text | `--disabled-text-
 @demo
 -->
 <dom-module id="saint-ntb-converter">
@@ -44,26 +44,24 @@ Custom property | Description | Default
 
     a {
       text-decoration: none;
-      apply(--saint-ntb-converter-link-text);
+      @apply(--saint-ntb-converter-link-text);
       color: var(--saint-ntb-converter-link-text-color, --paper-blue-500);
     }
 
     a :hover {
-      apply(--saint-ntb-converter-link-hover-text);
-      color: var(saint-ntb-converter-link-hover-text-color, --paper-indigo-500);
+      @apply(--saint-ntb-converter-link-hover-text);
+      color: var(--saint-ntb-converter-link-hover-text-color, --paper-indigo-500);
     }
 
-    span {
+    .content {
       vertical-align: baseline;
       @apply(--layout-horizontal);
-      apply(--saint-ntb-converter-text);
+      @apply(--saint-ntb-converter-text);
       color: var(--saint-ntb-converter-text-color, --primary-text-color);
     }
-    .postFix {
-      
-    }
-    span.placeHolder {
-      apply(--saint-ntb-converter-placeholder);
+
+    div.placeHolder {
+      @apply(--saint-ntb-converter-placeholder);
       color: var(--saint-ntb-converter-placeholder-text-color, --disabled-text-color);
     }
 
@@ -74,41 +72,39 @@ Custom property | Description | Default
     <!-- Base Content -->
     <template id="tmpl_contents" is="dom-repeat" items="{{_topContent}}">
        
-       <span class$="{{_setClassPlaceHolder()}}">
+       <div class$="content {{_setClassPlaceHolder(item)}}">
+        
+        <span>
+          {{_printContent(item)}}
+        </span>
+        
+        <small class="postFix">
+          {{postFix}}
+        </small>
 
-        {{item}}
-       
-        <template is="dom-if" if="{{postFix}}">
-       
-          <small class="postFix">&nbsp;{{postFix}}</small>
-       
-        </template>
-       
-       </span>
-    
     </template>
 
     <!-- Expand Content -->
     <template is="dom-if" if="{{_hasMore}}">
 
       <!-- Toggle Group -->
-      <div id$="{{_generateToggleGroup()}}" style="display:none;background-color: blue">
+      <div id$="{{_generateToggleGroup()}}" style="display:none;">
 
         <!-- Expand Content -->  
         <template is="dom-repeat" items="{{_bottomContent}}">
 
-          <span>{{item}}</span><br>
+          <span class="content">{{_printContent(item)}}</span>
 
         </template>        
 
       </div>
 
       <!-- Toggle Link Text -->
-      <div id="showMoreContent" style="background-color: yellow">
+      <div id="showMoreContent">
 
         <a href="/" on-click="_toggleMoreContent">
 
-          <span>{{_openText}}</span>          
+          <span>{{_openText}}</span>
 
         </a>
 
@@ -267,8 +263,39 @@ Custom property | Description | Default
       label.innerHTML = this.closeText;
 
       $(toggleGroup).slideDown(200, function() {
+
         this._isExpanded = true;
+
       }.bind(this));
+
+    },
+
+    /**
+     * print line
+     * @param {string} content string line
+     */
+    _printContent: function(content) {
+
+      if (typeof content === 'undefined' || content === '') {
+
+        return '\u00a0';
+
+      }
+
+      if (typeof content === 'string') {
+
+        content = content.replace(/ /g, '\u00a0');
+
+      }
+
+      if (this.postFix) {
+
+        content = content + '\u00a0';
+
+      }
+
+      return content;
+
     },
 
     /**
@@ -281,8 +308,11 @@ Custom property | Description | Default
         var contentRows = content.toString().split('\n');
 
         if (contentRows.length > this.breakRow) {
+          
           this._hasMore = true;
+          
           return contentRows.splice(0, this.breakRow);
+
         }
 
         this._hasMore = false;
@@ -301,11 +331,12 @@ Custom property | Description | Default
 
       if (content) {
 
-
         var contentRows = content.toString().split('\n');
 
         if (contentRows.length > this.breakRow) {
+
           return contentRows.splice(this.breakRow, contentRows.length);
+
         }
 
       }
@@ -324,7 +355,9 @@ Custom property | Description | Default
         var bottomContent = this._computeBottomContent(content);
 
         if (bottomContent) {
-          return this.openText.replace('%d', bottomContent.length);  
+
+          return this.openText.replace('%d', bottomContent.length);
+
         }
 
       }
