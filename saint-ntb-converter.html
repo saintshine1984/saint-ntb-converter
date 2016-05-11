@@ -53,11 +53,15 @@ Custom property | Description | Default
       color: var(saint-ntb-converter-link-hover-text-color, --paper-indigo-500);
     }
 
-    span {      
+    span {
+      vertical-align: baseline;
+      @apply(--layout-horizontal);
       apply(--saint-ntb-converter-text);
       color: var(--saint-ntb-converter-text-color, --primary-text-color);
     }
-
+    .postFix {
+      
+    }
     span.placeHolder {
       apply(--saint-ntb-converter-placeholder);
       color: var(--saint-ntb-converter-placeholder-text-color, --disabled-text-color);
@@ -69,20 +73,26 @@ Custom property | Description | Default
 
     <!-- Base Content -->
     <template id="tmpl_contents" is="dom-repeat" items="{{_topContent}}">
+       
+       <span class$="{{_setClassPlaceHolder()}}">
 
-        <span class$="{{_setClassPlaceHolder()}}">
-          {{item}}
-        </span>
-        
-        <small>{{postFix}}</small><br>
-
+        {{item}}
+       
+        <template is="dom-if" if="{{postFix}}">
+       
+          <small class="postFix">&nbsp;{{postFix}}</small>
+       
+        </template>
+       
+       </span>
+    
     </template>
 
     <!-- Expand Content -->
     <template is="dom-if" if="{{_hasMore}}">
 
       <!-- Toggle Group -->
-      <div id$="{{_generateToggleGroup()}}" style="display:none">
+      <div id$="{{_generateToggleGroup()}}" style="display:none;background-color: blue">
 
         <!-- Expand Content -->  
         <template is="dom-repeat" items="{{_bottomContent}}">
@@ -94,7 +104,7 @@ Custom property | Description | Default
       </div>
 
       <!-- Toggle Link Text -->
-      <div id="showMoreContent">
+      <div id="showMoreContent" style="background-color: yellow">
 
         <a href="/" on-click="_toggleMoreContent">
 
