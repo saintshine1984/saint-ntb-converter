@@ -42,13 +42,14 @@ Custom property | Description | Default
       box-sizing: border-box;
     }
 
-    a {
+    span {
+      cursor: pointer;
       text-decoration: none;
       @apply(--saint-ntb-converter-link-text);
       color: var(--saint-ntb-converter-link-text-color, --paper-blue-500);
     }
 
-    a :hover {
+    span :hover {
       @apply(--saint-ntb-converter-link-hover-text);
       color: var(--saint-ntb-converter-link-hover-text-color, --paper-indigo-500);
     }
@@ -240,11 +241,11 @@ Custom property | Description | Default
       <!-- Toggle Link Text -->
       <div id="showMoreContent">
 
-        <a href="/" on-click="_onClickToggle">
+        <span on-click="_onClickToggle">
 
           <span>{{_openText}}</span>
 
-        </a>
+        </span>
 
       </div>
       
@@ -397,10 +398,12 @@ Custom property | Description | Default
     /**
      * hide overflow line.
      */
-    hide: function(time = 200) {
+    hide: function(time) {
 
-      var label = this.querySelector('#showMoreContent span');
-      var toggleGroup = this.querySelector('#bottomContent');
+      time = time || 200;
+
+      var label = this.$$('#showMoreContent span');
+      var toggleGroup = this.$$('#bottomContent');
 
       $(toggleGroup).slideUp(time, function() {
         label.innerHTML = this._openText;
@@ -413,8 +416,8 @@ Custom property | Description | Default
      */
     expand: function() {
 
-      var label = this.querySelector('#showMoreContent span');
-      var toggleGroup = this.querySelector('#bottomContent');
+      var label = this.$$('#showMoreContent span');
+      var toggleGroup = this.$$('#bottomContent');
 
       label.innerHTML = this.closeText;
 
@@ -470,7 +473,7 @@ Custom property | Description | Default
 
         var temp = document.createElement('div');
         temp.innerHTML = content;
-        var div = this.querySelector('div.content.rows');
+        var div = this.$$('div.content.rows');
         div.innerHTML = '';
         div.appendChild(temp);
 
@@ -522,7 +525,7 @@ Custom property | Description | Default
       this.isSetPlaceHolder = false;
       this._hasMore = false;
 
-      var span = this.querySelector('span.placeHolder');
+      var span = this.$$('span.placeHolder');
 
       if (span && typeof span !== 'undefined') {
 
