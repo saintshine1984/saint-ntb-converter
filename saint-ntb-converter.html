@@ -55,14 +55,150 @@ Custom property | Description | Default
 
     .content {
       vertical-align: baseline;
-      @apply(--layout-horizontal);
+      @apply(--layout-vetical);
       @apply(--saint-ntb-converter-text);
       color: var(--saint-ntb-converter-text-color, --primary-text-color);
     }
+    .content /deep/ div {
+      display: block;
+    }
+    .content /deep/ img {
+      max-width: 100%;
+      @apply(--layout-start-justified));
+    }
 
-    div.placeHolder {
+    .placeHolder {
       @apply(--saint-ntb-converter-placeholder);
       color: var(--saint-ntb-converter-placeholder-text-color, --disabled-text-color);
+    }
+
+    /*
+    Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+    For licensing, see LICENSE.md or http://ckeditor.com/license
+    */
+    div.content.html {
+      /* Font */
+      font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
+      font-size: 12px;
+
+      /* Text color */
+      color: var(--primary-text-color);
+
+      /* Remove the background color to make it transparent */
+      background-color: #fff;
+    }
+    div.content.html /deep/ a {
+      color: var(--saint-ntb-converter-link-text-color, --paper-blue-500);
+    }
+    div.content.html /deep/ h1 {
+      font-size: 2em;
+    }
+
+    div.content.html /deep/ .cke_editable {
+      font-size: 13px;
+      line-height: 1.6;
+      /* Fix for missing scrollbars with RTL texts. (#10488) */
+      word-wrap: break-word;
+    }
+
+    div.content.html /deep/ blockquote {
+      font-style: italic;
+      font-family: Georgia, Times, "Times New Roman", serif;
+      padding: 2px 0;
+      border-style: solid;
+      border-color: #ccc;
+      border-width: 0;
+    }
+
+    div.content.html /deep/ .cke_contents_ltr blockquote {
+      padding-left: 20px;
+      padding-right: 8px;
+      border-left-width: 5px;
+    }
+
+    div.content.html /deep/ .cke_contents_rtl blockquote {
+      padding-left: 8px;
+      padding-right: 20px;
+      border-right-width: 5px;
+    }
+
+    div.content.html /deep/ ol,
+    div.content.html /deep/ ul,
+    div.content.html /deep/ dl {
+      /* IE7: reset rtl list margin. (#7334) */
+      margin-right: 0px;
+      /* preserved spaces for list items with text direction other than the list. (#6249,#8049)*/
+      padding: 0 40px;
+    }
+
+    div.content.html /deep/ h1,
+    div.content.html /deep/ h2,
+    div.content.html /deep/ h3,
+    div.content.html /deep/ h4,
+    div.content.html /deep/ h5,
+    div.content.html /deep/ h6 {
+      font-weight: normal;
+      line-height: 1.2;
+    }
+
+    div.content.html /deep/ hr {
+      border: 0px;
+      border-top: 1px solid #ccc;
+    }
+    div.content.html /deep/ img {
+      max-width: 100%;
+      height: auto !important;
+    }
+
+    div.content.html /deep/ img.right {
+      border: 1px solid #ccc;
+      float: right;
+      margin-left: 15px;
+      padding: 5px;
+    }
+
+    div.content.html /deep/ img.left {
+      border: 1px solid #ccc;
+      float: left;
+      margin-right: 15px;
+      padding: 5px;
+    }
+
+    div.content.html /deep/ pre {
+      white-space: pre-wrap; /* CSS 2.1 */
+      word-wrap: break-word; /* IE7 */
+      -moz-tab-size: 4;
+      tab-size: 4;
+    }
+
+    div.content.html /deep/ .marker {
+      background-color: Yellow;
+    }
+
+    div.content.html /deep/ span[lang] {
+      font-style: italic;
+    }
+
+    div.content.html /deep/ figure {
+      text-align: center;
+      border: solid 1px #ccc;
+      border-radius: 2px;
+      background: rgba(0,0,0,0.05);
+      padding: 10px;
+      margin: 10px 20px;
+      display: inline-block;
+    }
+
+    div.content.html /deep/ figure > figcaption {
+      text-align: center;
+      display: block; /* For IE8 */
+    }
+
+    div.content.html /deep/ a > img {
+      padding: 1px;
+      margin: 1px;
+      border: none;
+      outline: 1px solid #0782C1;
     }
 
   </style>
@@ -70,30 +206,32 @@ Custom property | Description | Default
   <template>
 
     <!-- Base Content -->
-    <template id="tmpl_contents" is="dom-repeat" items="{{_topContent}}">
+    <template id="tmpl_contents" is="dom-repeat" items="{{_topContentRows}}">
        
-       <div class$="content {{_setClassPlaceHolder(item)}}">
-        
-        <span>
-          {{_printContent(item)}}
-        </span>
-        
-        <small class="postFix">
-          {{postFix}}
-        </small>
+       <div class$="content rows {{_setContentRowClass(item)}}">
 
+        {{_printContent(item, index, 'top')}}
+        
+        {{postFix}}
+      
+      </div>
+    
     </template>
 
     <!-- Expand Content -->
     <template is="dom-if" if="{{_hasMore}}">
 
       <!-- Toggle Group -->
-      <div id$="{{_generateToggleGroup()}}" style="display:none;">
+      <div id="bottomContent" style="display:none;">
 
         <!-- Expand Content -->  
-        <template is="dom-repeat" items="{{_bottomContent}}">
-
-          <span class="content">{{_printContent(item)}}</span>
+        <template is="dom-repeat" items="{{_bottomContentRows}}">
+          
+          <div class="content rows">
+        
+            {{_printContent(item, index, 'bottom')}}
+          
+          </div>
 
         </template>        
 
@@ -102,7 +240,7 @@ Custom property | Description | Default
       <!-- Toggle Link Text -->
       <div id="showMoreContent">
 
-        <a href="/" on-click="_toggleMoreContent">
+        <a href="/" on-click="_onClickToggle">
 
           <span>{{_openText}}</span>
 
@@ -126,10 +264,21 @@ Custom property | Description | Default
 
       /**
        * Break row
+       * support by text mode
        */
       breakRow: {
         type: Number,
         value: 5
+      },
+
+      /**
+       * no Break
+       * support by text mode
+       */
+      noBreak: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true
       },
 
       /**
@@ -142,7 +291,17 @@ Custom property | Description | Default
       },
 
       /**
+       * ContentType
+       * support text or html
+       */
+      contentType: {
+        type: String,
+        value: 'text'
+      },
+
+      /**
        * less text
+       * support by text mode
        */
       closeText: {
         type: String,
@@ -151,14 +310,15 @@ Custom property | Description | Default
 
       /**
        * expand text
+       * support by text mode
        */
       openText: {
         type: String,
         value: 'More %d Rows',
-        reflectToAttribute: true
       },
       /**
        * post fix text for single line text
+       * support by text mode
        */
       postFix: {
         type: String,
@@ -169,6 +329,12 @@ Custom property | Description | Default
        */
       placeholder: {
         type: String,
+        value: ' '
+      },
+
+      _isHTML: {
+        type: Boolean,
+        value: false
       },
 
       /**
@@ -176,33 +342,22 @@ Custom property | Description | Default
        */
       _openText: {
         type: String,
-        computed: '_computeopenText(content)'
       },
 
       /**
        *
        */
-      _topContent: {
+      _topContentRows: {
         type: Array,
-        computed: '_computeTopContent(content)',
         notify: true
       },
 
       /**
        *
        */
-      _bottomContent: {
+      _bottomContentRows: {
         type: Array,
-        computed: '_computeBottomContent(content)',
         notify: true
-      },
-
-      /*
-       * for toggle action
-       */
-      _toggleGroupText: {
-        type: String,
-        value: 'content-printer-toggle-group'
       },
 
       /**
@@ -227,7 +382,8 @@ Custom property | Description | Default
     /**
      * attached
      */
-    attached: function() {
+    ready: function() {
+      
 
     },
 
@@ -241,12 +397,12 @@ Custom property | Description | Default
     /**
      * hide overflow line.
      */
-    hide: function() {
+    hide: function(time = 200) {
 
       var label = this.querySelector('#showMoreContent span');
-      var toggleGroup = this.querySelector('#' + this._toggleGroupText);
+      var toggleGroup = this.querySelector('#bottomContent');
 
-      $(toggleGroup).slideUp(200, function() {
+      $(toggleGroup).slideUp(time, function() {
         label.innerHTML = this._openText;
         this._isExpanded = false;
       }.bind(this));
@@ -258,7 +414,7 @@ Custom property | Description | Default
     expand: function() {
 
       var label = this.querySelector('#showMoreContent span');
-      var toggleGroup = this.querySelector('#' + this._toggleGroupText);
+      var toggleGroup = this.querySelector('#bottomContent');
 
       label.innerHTML = this.closeText;
 
@@ -274,142 +430,171 @@ Custom property | Description | Default
      * print line
      * @param {string} content string line
      */
-    _printContent: function(content) {
+    _printContent: function(content, index, position) {
 
       if (typeof content === 'undefined' || content === '') {
+
+        if (index === 0 && position === 'top') {
+          
+          return this.placeholder;
+
+        }
 
         return '\u00a0';
 
       }
 
-      if (typeof content === 'string') {
+      if (this.contentType === 'text') {
 
         content = content.replace(/ /g, '\u00a0');
 
-      }
+        if (this.postFix) {
 
-      if (this.postFix) {
+          content = content + '\u00a0';
 
-        content = content + '\u00a0';
+        }
+
+      } else if (this.contentType === 'html') {
+
+        content = this.htmlEncode(content);
+
 
       }
 
       return content;
 
     },
+    htmlEncode: function (content, index, position){
+      
+      setTimeout(function() {
 
-    /**
-     *
-     */
-    _computeTopContent: function(content) {
+        var temp = document.createElement('div');
+        temp.innerHTML = content;
+        var div = this.querySelector('div.content.rows');
+        div.innerHTML = '';
+        div.appendChild(temp);
 
-      if (content) {
 
-        var contentRows = content.toString().split('\n');
-
-        if (contentRows.length > this.breakRow) {
+        // if ($(content)[0].nodeName === '#text') {
+        
+        //     var temp = document.createElement('div');
+        //     temp.innerHTML = $(content)[0].textContent;
+        //     if (temp.innerHTML.trim() === '') {
+        //       temp.innerHTML = '\u00a0';
+        //     }
+        //     div = temp;
+        //   } else {
+        //     content = content.outerHTML;
           
-          this._hasMore = true;
+        //     var rex = /<img\s[^>]*?src\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>/g;
+        //     var rex2 = /<img\s[^>]*?alt\s*=\s*['\"]([^'\"]*?)['\"][^>]*?>/g;
+        //     result = rex.exec(content);
+        //     result2 = rex2.exec(content);
+            
+        //     if (result) {
+        //       var img = document.createElement('img');
+        //       img.src = result[1];
+        //       if (result2) {
+        //         img.alt = result2[1];
+        //       }
+        //       div.innerHTML = img.outerHTML;
+
+        //     } else {
+
+        //       div.innerHTML = content;
+              
+        //     }
+        //   }
+
           
-          return contentRows.splice(0, this.breakRow);
 
-        }
-
-        this._hasMore = false;
-
-        return contentRows;
-      }
-
-      return null;
-
+        }.bind(this));
     },
 
     /**
      *
      */
-    _computeBottomContent: function(content) {
+    _observerContent: function(newContent, oldContent) {
+      
+      // this.hide(0);
 
-      if (content) {
-
-        var contentRows = content.toString().split('\n');
-
-        if (contentRows.length > this.breakRow) {
-
-          return contentRows.splice(this.breakRow, contentRows.length);
-
-        }
-
-      }
-
-      return null;
-
-    },
-
-    /**
-     *
-     */
-    _computeopenText: function(content) {
-
-      if (content) {
-
-        var bottomContent = this._computeBottomContent(content);
-
-        if (bottomContent) {
-
-          return this.openText.replace('%d', bottomContent.length);
-
-        }
-
-      }
-
-      return null;
-
-    },
-
-    /**
-     *
-     */
-    _setClassPlaceHolder: function() {
-
-      if (this.isSetPlaceHolder) {        
-
-        return 'placeHolder';
-
-      }
-    },
-
-    /**
-     *
-     */
-    _observerContent: function(content) {
-
+      // set default
       this.isSetPlaceHolder = false;
+      this._hasMore = false;
 
       var span = this.querySelector('span.placeHolder');
 
-      if (span) {
+      if (span && typeof span !== 'undefined') {
 
         span.classList.remove('placeHolder');
 
       }
 
-      if (typeof content === 'undefined' || content === '') {
 
+      // Content is Empty
+      if (typeof newContent === 'undefined' || newContent === '' || newContent === null) {
+
+        // isSet Placeholder
         if (this.placeholder) {
 
-          setTimeout(function() {
-            this.content = this.placeholder;
-            this.isSetPlaceHolder = true;
-          }.bind(this));
+          newContent = this.placeholder;
+          this.isSetPlaceHolder = true;
+
+        } else {
+
+          newContent = '\u00a0';
 
         }
+
       }
+
+      // Content Type is TEXT
+      if (this.contentType === 'text') {
+
+        var contentRows = newContent.toString().split('\n');
+
+        if ((contentRows.length > this.breakRow) && this.noBreak === false) {
+          
+          this._hasMore = true;
+          this._topContentRows = contentRows.splice(0, this.breakRow);
+          this._bottomContentRows = contentRows;
+          this._openText = this.openText.replace('%d', this._bottomContentRows.length);
+
+        } else {
+
+          this._topContentRows = contentRows;
+
+        }
+
+      // Content Type HTML
+      } else if (this.contentType === 'html') {
+
+        this._topContentRows = [newContent];
+
+      }      
     },
 
     /**
      *
      */
-    _toggleMoreContent: function(e) {
+    _setContentRowClass: function(content) {
+
+      var cls = this.contentType;
+
+      if (this.isSetPlaceHolder) {
+
+        cls = cls + ' placeHolder';
+
+      }
+
+      return cls;
+
+    },
+
+    /**
+     *
+     */
+    _onClickToggle: function(event) {
 
       if (this._isExpanded) {
 
@@ -421,16 +606,7 @@ Custom property | Description | Default
 
       }
 
-      e.preventDefault();
-
-    },
-
-    /**
-     *
-     */
-    _generateToggleGroup: function() {
-
-      return this._toggleGroupText;
+      event.preventDefault();
 
     },
 
